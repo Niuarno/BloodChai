@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BloodChai – Save Lives in Bangladesh</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #E8272A;
+  --red-dark: #B01E20;
+  --red-light: #FF4B4E;
+  --red-glow: rgba(232,39,42,0.18);
+  --red-subtle: rgba(232,39,42,0.08);
+  --bg: #0A0A0B;
+  --bg2: #111114;
+  --bg3: #18181C;
+  --bg4: #1E1E24;
+  --surface: #22222A;
+  --surface2: #2A2A34;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.14);
+  --text: #F0EEE8;
+  --text2: #A09E98;
+  --text3: #706E68;
+  --accent: #FF6B35;
+  --green: #2ECC71;
+  --green-subtle: rgba(46,204,113,0.1);
+  --yellow: #F1C40F;
+  --yellow-subtle: rgba(241,196,15,0.1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4,h5{font-family:'Syne',sans-serif}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:10px}
+
+/* TYPOGRAPHY */
+.syne{font-family:'Syne',sans-serif}
+.mono{font-family:'DM Mono',monospace}
+
+/* ANIMATIONS */
+@keyframes pulse-ring{0%{transform:scale(1);opacity:1}100%{transform:scale(1.6);opacity:0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideLeft{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 20px var(--red-glow)}50%{box-shadow:0 0 40px var(--red-glow),0 0 80px rgba(232,39,42,0.1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drip{0%{transform:translateY(-4px);opacity:0}50%{opacity:1}100%{transform:translateY(4px);opacity:0}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.15)}28%{transform:scale(1)}42%{transform:scale(1.1)}70%{transform:scale(1)}}
+
+.fade-in{animation:fadeIn 0.5s ease forwards}
+.slide-left{animation:slideLeft 0.4s ease forwards}
+
+/* LAYOUT */
+#app{display:flex;flex-direction:column;min-height:100vh}
+.page{display:none;flex:1}
+.page.active{display:flex;flex-direction:column;animation:fadeIn 0.4s ease}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,11,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 1.5rem;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--red),var(--red-dark));border-radius:10px;display:flex;align-items:center;justify-content:center;animation:glow-pulse 3s ease infinite}
+.logo-icon svg{width:20px;height:20px;fill:white}
+.logo-text{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;color:var(--text)}
+.logo-text span{color:var(--red)}
+.nav-links{display:flex;align-items:center;gap:0.25rem}
+.nav-link{padding:0.4rem 0.75rem;border-radius:8px;color:var(--text2);font-size:0.875rem;font-weight:500;cursor:pointer;transition:all 0.2s;border:none;background:none;white-space:nowrap}
+.nav-link:hover{color:var(--text);background:var(--surface)}
+.nav-link.active{color:var(--red);background:var(--red-subtle)}
+.nav-btn{padding:0.45rem 1rem;border-radius:8px;font-size:0.875rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:none;font-family:'Syne',sans-serif}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text)}
+.btn-outline:hover{border-color:var(--red);color:var(--red)}
+.btn-red{background:var(--red);color:white}
+.btn-red:hover{background:var(--red-light);box-shadow:0 0 20px var(--red-glow)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:all 0.3s}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem;z-index:99;flex-direction:column;gap:0.5rem}
+.mobile-menu.open{display:flex}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0.6rem 1.25rem;border-radius:10px;font-size:0.875rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:none;font-family:'DM Sans',sans-serif;text-decoration:none}
+.btn-primary{background:var(--red);color:white}
+.btn-primary:hover{background:var(--red-light);box-shadow:0 0 24px var(--red-glow);transform:translateY(-1px)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border2)}
+.btn-secondary:hover{background:var(--surface);border-color:var(--border2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);background:var(--surface)}
+.btn-danger{background:var(--red-dark);color:white}
+.btn-success{background:#1a5c36;color:var(--green);border:1px solid var(--green)}
+.btn-success:hover{background:#24784a}
+.btn-sm{padding:0.35rem 0.75rem;font-size:0.8rem}
+.btn-lg{padding:0.8rem 2rem;font-size:1rem}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.5rem}
+.card-sm{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1rem}
+.card:hover{border-color:var(--border2)}
+.card-red{border-color:var(--red-glow);box-shadow:0 0 30px rgba(232,39,42,0.05)}
+
+/* FORMS */
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:0.8rem;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em}
+.form-control{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.65rem 0.9rem;color:var(--text);font-size:0.9rem;font-family:'DM Sans',sans-serif;transition:border-color 0.2s;width:100%}
+.form-control:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px var(--red-subtle)}
+.form-control::placeholder{color:var(--text3)}
+select.form-control{cursor:pointer}
+textarea.form-control{resize:vertical;min-height:100px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:0.2rem 0.6rem;border-radius:20px;font-size:0.75rem;font-weight:600;letter-spacing:0.02em}
+.badge-red{background:var(--red-subtle);color:var(--red-light);border:1px solid rgba(232,39,42,0.2)}
+.badge-green{background:var(--green-subtle);color:var(--green);border:1px solid rgba(46,204,113,0.2)}
+.badge-yellow{background:var(--yellow-subtle);color:var(--yellow);border:1px solid rgba(241,196,15,0.2)}
+.badge-gray{background:var(--surface);color:var(--text2);border:1px solid var(--border)}
+.badge-urgent{background:rgba(232,39,42,0.15);color:#ff6b6b;border:1px solid rgba(232,39,42,0.3);animation:glow-pulse 2s infinite}
+
+/* BLOOD TYPE BADGES */
+.blood-type{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem}
+.bt-ap{background:rgba(232,39,42,0.15);color:#ff6b6b;border:1px solid rgba(232,39,42,0.3)}
+.bt-an{background:rgba(232,39,42,0.2);color:#ff4444;border:1px solid rgba(232,39,42,0.4)}
+.bt-bp{background:rgba(255,107,53,0.15);color:#ff8c42;border:1px solid rgba(255,107,53,0.3)}
+.bt-bn{background:rgba(255,107,53,0.2);color:#ff6b1a;border:1px solid rgba(255,107,53,0.4)}
+.bt-op{background:rgba(241,196,15,0.15);color:#f1c40f;border:1px solid rgba(241,196,15,0.3)}
+.bt-on{background:rgba(241,196,15,0.2);color:#e6b800;border:1px solid rgba(241,196,15,0.4)}
+.bt-abp{background:rgba(155,89,182,0.15);color:#c39bd3;border:1px solid rgba(155,89,182,0.3)}
+.bt-abn{background:rgba(155,89,182,0.2);color:#b07cc6;border:1px solid rgba(155,89,182,0.4)}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:1024px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}
+@media(max-width:640px){.grid-4{grid-template-columns:1fr}}
+
+/* SECTIONS */
+.section{padding:2rem 1.5rem;max-width:1200px;margin:0 auto;width:100%}
+.section-header{margin-bottom:2rem}
+.section-title{font-size:1.6rem;font-weight:700;margin-bottom:0.5rem}
+.section-subtitle{color:var(--text2);font-size:0.95rem}
+.divider{height:1px;background:var(--border);margin:1.5rem 0}
+
+/* HERO */
+.hero{min-height:90vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:4rem 1.5rem}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(232,39,42,0.12) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(255,107,53,0.06) 0%,transparent 50%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:0.4}
+.hero-content{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;width:100%;position:relative;z-index:1}
+.hero-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem}
+.hero-eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--red);position:relative}
+.hero-eyebrow-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--red);animation:pulse-ring 2s ease infinite}
+.hero-title{font-size:clamp(2.5rem,5vw,4rem);font-weight:800;line-height:1.1;margin-bottom:1.5rem}
+.hero-title span{color:var(--red);-webkit-text-stroke:0px;background:linear-gradient(135deg,var(--red-light),var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-desc{font-size:1.05rem;color:var(--text2);line-height:1.7;margin-bottom:2rem;max-width:480px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2.5rem}
+.hero-stat{text-align:center;padding:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px}
+.hero-stat-num{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;color:var(--red)}
+.hero-stat-label{font-size:0.75rem;color:var(--text2);margin-top:2px}
+.hero-visual{display:flex;justify-content:center;align-items:center}
+.blood-drop-container{position:relative;width:280px;height:280px;animation:float 4s ease-in-out infinite}
+.blood-drop-bg{position:absolute;inset:0;background:radial-gradient(circle,rgba(232,39,42,0.2) 0%,transparent 70%);border-radius:50%}
+.blood-drop-svg{width:160px;height:200px;filter:drop-shadow(0 0 30px rgba(232,39,42,0.5))}
+
+@media(max-width:768px){
+  .hero-content{grid-template-columns:1fr;text-align:center}
+  .hero-visual{display:none}
+  .hero-actions{justify-content:center}
+  .hero-stats{grid-template-columns:repeat(3,1fr)}
+}
+
+/* STATS BAR */
+.stats-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.5rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+@media(max-width:768px){.stats-bar{grid-template-columns:repeat(2,1fr)}}
+.stat-item{text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:700}
+.stat-label{font-size:0.8rem;color:var(--text2);margin-top:4px}
+
+/* DONOR CARD */
+.donor-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.25rem;transition:all 0.2s;cursor:pointer;position:relative;overflow:hidden}
+.donor-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent);opacity:0;transition:opacity 0.2s}
+.donor-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.donor-card:hover::before{opacity:1}
+.donor-card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.donor-avatar{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--border2)}
+.donor-avatar-placeholder{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;font-family:'Syne',sans-serif;border:2px solid var(--border2);flex-shrink:0}
+.donor-info{flex:1;min-width:0}
+.donor-name{font-weight:600;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.donor-district{font-size:0.8rem;color:var(--text2);margin-top:2px}
+.donor-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.donor-last-donation{font-size:0.8rem;color:var(--text3)}
+
+/* BLOOD BANK CARD */
+.bank-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.25rem;transition:all 0.2s}
+.bank-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.bank-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.bank-name{font-family:'Syne',sans-serif;font-weight:600;font-size:1rem}
+.bank-address{font-size:0.83rem;color:var(--text2);line-height:1.5;margin-bottom:8px}
+.bank-contact{font-size:0.83rem;color:var(--text2)}
+.bank-contact a{color:var(--red-light);text-decoration:none}
+.bank-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:20px;padding:2rem;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;transform:scale(0.95);transition:transform 0.2s}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.modal-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700}
+.modal-close{width:32px;height:32px;border-radius:8px;background:var(--surface);border:none;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.2s}
+.modal-close:hover{background:var(--surface2);color:var(--text)}
+
+/* DASHBOARD */
+.dashboard-layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 64px)}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 1rem;position:sticky;top:64px;height:calc(100vh - 64px);overflow-y:auto;flex-shrink:0}
+.sidebar-nav{display:flex;flex-direction:column;gap:4px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:0.65rem 0.85rem;border-radius:10px;color:var(--text2);cursor:pointer;transition:all 0.2s;font-size:0.9rem;font-weight:500;border:none;background:none;width:100%;text-align:left}
+.sidebar-item:hover{background:var(--surface);color:var(--text)}
+.sidebar-item.active{background:var(--red-subtle);color:var(--red)}
+.sidebar-item svg{width:18px;height:18px;flex-shrink:0}
+.sidebar-section{font-size:0.7rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;padding:0.75rem 0.85rem 0.35rem;margin-top:0.5rem}
+.main-content{padding:2rem;overflow-y:auto}
+@media(max-width:900px){
+  .dashboard-layout{grid-template-columns:1fr}
+  .sidebar{display:none;position:fixed;left:0;top:64px;bottom:0;z-index:90;width:260px}
+  .sidebar.mobile-open{display:flex;flex-direction:column}
+  .main-content{padding:1.25rem}
+}
+
+/* NOTIFICATION DOT */
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--red);margin-left:auto;animation:pulse-ring 2s ease infinite}
+
+/* FILTER BAR */
+.filter-bar{display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;padding:1rem;background:var(--bg2);border:1px solid var(--border);border-radius:14px;margin-bottom:1.5rem}
+.filter-label{font-size:0.8rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap}
+.filter-select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:0.45rem 0.75rem;color:var(--text);font-size:0.85rem;cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--red)}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:0.85rem 1.1rem;display:flex;align-items:center;gap:10px;min-width:280px;max-width:360px;animation:slideLeft 0.3s ease;font-size:0.875rem}
+.toast-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0}
+.toast-success .toast-icon{background:var(--green-subtle);color:var(--green)}
+.toast-error .toast-icon{background:var(--red-subtle);color:var(--red-light)}
+.toast-info .toast-icon{background:rgba(52,152,219,0.1);color:#5dade2}
+
+/* TABLE */
+.table-wrapper{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+th{background:var(--bg3);padding:0.75rem 1rem;text-align:left;font-size:0.78rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;border-bottom:1px solid var(--border)}
+td{padding:0.85rem 1rem;border-bottom:1px solid var(--border);font-size:0.875rem}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+
+/* PROFILE */
+.avatar-upload{position:relative;width:90px;height:90px}
+.avatar-img{width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid var(--border2)}
+.avatar-placeholder{width:90px;height:90px;border-radius:50%;border:3px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:1.75rem;font-weight:700;font-family:'Syne',sans-serif}
+.avatar-edit{position:absolute;bottom:0;right:0;width:28px;height:28px;border-radius:50%;background:var(--red);border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.75rem;color:white;transition:transform 0.2s}
+.avatar-edit:hover{transform:scale(1.1)}
+
+/* STATUS INDICATOR */
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+.status-active{background:var(--green)}
+.status-inactive{background:var(--text3)}
+.status-pending{background:var(--yellow)}
+
+/* PROGRESS BAR */
+.progress-bar{height:6px;background:var(--surface);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-light));border-radius:3px;transition:width 0.5s ease}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text2)}
+.empty-state-icon{font-size:3rem;margin-bottom:1rem;opacity:0.4}
+.empty-state-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem}
+
+/* URGENCY LEVELS */
+.urgency-critical{color:#ff4444;font-weight:600}
+.urgency-high{color:#ff8c00;font-weight:600}
+.urgency-normal{color:var(--text2)}
+
+/* LOADING */
+.spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block}
+
+/* HOW IT WORKS */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.step-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:1.75rem;position:relative}
+.step-num{font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:var(--red-subtle);position:absolute;top:1rem;right:1.25rem;line-height:1}
+.step-icon{width:48px;height:48px;border-radius:12px;background:var(--red-subtle);border:1px solid rgba(232,39,42,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:1rem;font-size:1.4rem}
+.step-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:0.5rem}
+.step-desc{font-size:0.875rem;color:var(--text2);line-height:1.6}
+@media(max-width:768px){.steps-grid{grid-template-columns:1fr}}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.5rem 1.5rem;margin-top:auto}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:2rem}
+.footer-brand{display:flex;flex-direction:column;gap:0.75rem}
+.footer-desc{font-size:0.875rem;color:var(--text2);line-height:1.6;max-width:280px}
+.footer-col h4{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;margin-bottom:1rem;color:var(--text)}
+.footer-links{display:flex;flex-direction:column;gap:0.5rem}
+.footer-link{font-size:0.875rem;color:var(--text2);cursor:pointer;transition:color 0.2s}
+.footer-link:hover{color:var(--red-light)}
+.footer-bottom{max-width:1200px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:var(--text3)}
+@media(max-width:768px){.footer-inner{grid-template-columns:1fr 1fr}.footer-bottom{flex-direction:column;gap:0.5rem}}
+@media(max-width:480px){.footer-inner{grid-template-columns:1fr}}
+
+/* REQUEST CARD */
+.request-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;transition:all 0.2s}
+.request-card:hover{border-color:var(--border2)}
+.request-card.urgent{border-left:3px solid var(--red);box-shadow:0 0 20px rgba(232,39,42,0.05)}
+.request-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.request-title{font-weight:600;font-size:0.9rem}
+.request-meta{font-size:0.8rem;color:var(--text2);display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.request-actions{display:flex;gap:8px;margin-top:12px}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;gap:10px}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--surface2);border-radius:24px;transition:0.3s}
+.toggle-slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:var(--text2);border-radius:50%;transition:0.3s}
+.toggle input:checked+.toggle-slider{background:var(--red)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px);background:white}
+
+/* UTILITY */
+.text-red{color:var(--red-light)}
+.text-green{color:var(--green)}
+.text-yellow{color:var(--yellow)}
+.text-muted{color:var(--text2)}
+.text-center{text-align:center}
+.text-sm{font-size:0.85rem}
+.text-xs{font-size:0.75rem}
+.font-bold{font-weight:700}
+.gap-1{gap:0.5rem}
+.gap-2{gap:1rem}
+.flex{display:flex}
+.flex-col{flex-direction:column}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.flex-wrap{flex-wrap:wrap}
+.mt-1{margin-top:0.5rem}
+.mt-2{margin-top:1rem}
+.mt-3{margin-top:1.5rem}
+.mb-1{margin-bottom:0.5rem}
+.mb-2{margin-bottom:1rem}
+.mb-3{margin-bottom:1.5rem}
+.w-full{width:100%}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- MODAL OVERLAY -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<div id="app">
+
+<!-- NAVIGATION -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="navigate('home')">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2 C12 2 5 9 5 14 C5 17.87 8.13 21 12 21 C15.87 21 19 17.87 19 14 C19 9 12 2 12 2Z"/></svg>
+    </div>
+    <span class="logo-text">Blood<span>Chai</span></span>
+  </div>
+  <div class="nav-links" id="navLinks">
+    <button class="nav-link" onclick="navigate('home')">Home</button>
+    <button class="nav-link" onclick="navigate('find-donor')">Find Donor</button>
+    <button class="nav-link" onclick="navigate('blood-banks')">Blood Banks</button>
+    <button class="nav-link" onclick="navigate('how-it-works')">How It Works</button>
+  </div>
+  <div class="flex items-center gap-2" id="navActions">
+    <button class="nav-btn btn-outline" onclick="navigate('login')">Log in</button>
+    <button class="nav-btn btn-red" onclick="navigate('register')">Donate Blood</button>
+  </div>
+  <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="nav-link" onclick="navigate('home');closeMobileMenu()">Home</button>
+  <button class="nav-link" onclick="navigate('find-donor');closeMobileMenu()">Find Donor</button>
+  <button class="nav-link" onclick="navigate('blood-banks');closeMobileMenu()">Blood Banks</button>
+  <button class="nav-link" onclick="navigate('how-it-works');closeMobileMenu()">How It Works</button>
+  <div class="divider"></div>
+  <button class="btn btn-ghost w-full" onclick="navigate('login');closeMobileMenu()">Log in</button>
+  <button class="btn btn-primary w-full" onclick="navigate('register');closeMobileMenu()">Register as Donor</button>
+</div>
+
+<!-- PAGES -->
+
+<!-- ==================== HOME PAGE ==================== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div>
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          <span style="font-size:0.85rem;color:var(--text2);font-weight:500">Bangladesh's #1 Blood Donor Platform</span>
+        </div>
+        <h1 class="hero-title">Every Drop<br>Saves a <span>Life</span></h1>
+        <p class="hero-desc">Connect blood donors with those who need it most across Bangladesh. Fast, free, and life-saving. Join 12,000+ donors today.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary btn-lg" onclick="navigate('register')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C12 2 5 9 5 14a7 7 0 0014 0C19 9 12 2 12 2z"/></svg>
+            Register as Donor
+          </button>
+          <button class="btn btn-secondary btn-lg" onclick="navigate('find-donor')">
+            Find a Donor
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num">12K+</div>
+            <div class="hero-stat-label">Active Donors</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">64</div>
+            <div class="hero-stat-label">Districts</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num">4.8K</div>
+            <div class="hero-stat-label">Lives Saved</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="blood-drop-container">
+          <div class="blood-drop-bg"></div>
+          <svg class="blood-drop-svg" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="dropGrad" cx="40%" cy="35%" r="60%">
+                <stop offset="0%" stop-color="#FF6B6B"/>
+                <stop offset="60%" stop-color="#E8272A"/>
+                <stop offset="100%" stop-color="#8B0000"/>
+              </radialGradient>
+            </defs>
+            <path d="M60 8 C60 8 15 55 15 90 C15 118 35 140 60 140 C85 140 105 118 105 90 C105 55 60 8 60 8Z" fill="url(#dropGrad)" opacity="0.95"/>
+            <path d="M42 88 C42 80 55 72 60 68 C65 72 78 80 78 88 C78 96 70 104 60 104 C50 104 42 96 42 88Z" fill="rgba(255,255,255,0.15)"/>
+            <ellipse cx="45" cy="72" rx="6" ry="9" fill="rgba(255,255,255,0.2)" transform="rotate(-20,45,72)"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num" style="color:var(--red)">A+</div>
+      <div class="stat-label">Most Needed Type</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="color:var(--accent)">2.4K</div>
+      <div class="stat-label">Donations This Month</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="color:var(--green)">98%</div>
+      <div class="stat-label">Request Fulfillment</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="color:var(--yellow)">64</div>
+      <div class="stat-label">Districts Covered</div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS PREVIEW -->
+  <div class="section">
+    <div class="section-header text-center">
+      <div class="badge badge-red mb-2" style="margin:0 auto 0.75rem">Platform Features</div>
+      <h2 class="section-title">How BloodChai Works</h2>
+      <p class="section-subtitle">Simple steps to save lives or get the help you need</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">🩸</div>
+        <h3 class="step-title">Register as Donor</h3>
+        <p class="step-desc">Create your profile with blood type, district, and contact info. Keep your profile updated to stay active.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">🔍</div>
+        <h3 class="step-title">Find Donors Near You</h3>
+        <p class="step-desc">Filter by district, blood type, and availability to find compatible donors closest to your location.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">💬</div>
+        <h3 class="step-title">Send Blood Request</h3>
+        <p class="step-desc">Submit a request with hospital address, urgency level, and contact details. The donor will respond directly.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED BLOOD TYPES -->
+  <div class="section" style="padding-top:0">
+    <div class="section-header">
+      <h2 class="section-title">Blood Types in Demand</h2>
+      <p class="section-subtitle">Current donor availability across Bangladesh</p>
+    </div>
+    <div class="grid-4">
+      <div class="card card-sm flex items-center gap-2" style="gap:12px;padding:1rem">
+        <div class="blood-type bt-ap">A+</div>
+        <div><div style="font-weight:600;font-size:0.9rem">A Positive</div><div style="font-size:0.8rem;color:var(--text2)">1,842 donors</div></div>
+        <div class="badge badge-green" style="margin-left:auto">High</div>
+      </div>
+      <div class="card card-sm flex items-center gap-2" style="gap:12px;padding:1rem">
+        <div class="blood-type bt-on">O−</div>
+        <div><div style="font-weight:600;font-size:0.9rem">O Negative</div><div style="font-size:0.8rem;color:var(--text2)">386 donors</div></div>
+        <div class="badge badge-red" style="margin-left:auto">Low</div>
+      </div>
+      <div class="card card-sm flex items-center gap-2" style="gap:12px;padding:1rem">
+        <div class="blood-type bt-bp">B+</div>
+        <div><div style="font-weight:600;font-size:0.9rem">B Positive</div><div style="font-size:0.8rem;color:var(--text2)">1,241 donors</div></div>
+        <div class="badge badge-green" style="margin-left:auto">Good</div>
+      </div>
+      <div class="card card-sm flex items-center gap-2" style="gap:12px;padding:1rem">
+        <div class="blood-type bt-abn">AB−</div>
+        <div><div style="font-weight:600;font-size:0.9rem">AB Negative</div><div style="font-size:0.8rem;color:var(--text2)">142 donors</div></div>
+        <div class="badge badge-red" style="margin-left:auto">Critical</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn btn-primary" onclick="navigate('find-donor')">Find a Compatible Donor →</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="nav-logo" style="cursor:default">
+          <div class="logo-icon" style="animation:none">
+            <svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:white"><path d="M12 2 C12 2 5 9 5 14 C5 17.87 8.13 21 12 21 C15.87 21 19 17.87 19 14 C19 9 12 2 12 2Z"/></svg>
+          </div>
+          <span class="logo-text">Blood<span>Chai</span></span>
+        </div>
+        <p class="footer-desc">Bangladesh's trusted blood donation platform. Connecting donors and recipients to save lives every day.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <div class="footer-links">
+          <span class="footer-link" onclick="navigate('find-donor')">Find Donor</span>
+          <span class="footer-link" onclick="navigate('blood-banks')">Blood Banks</span>
+          <span class="footer-link" onclick="navigate('register')">Become Donor</span>
+          <span class="footer-link" onclick="navigate('how-it-works')">How It Works</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Account</h4>
+        <div class="footer-links">
+          <span class="footer-link" onclick="navigate('login')">Log In</span>
+          <span class="footer-link" onclick="navigate('register')">Register</span>
+          <span class="footer-link" onclick="navigate('donor-dashboard')">Dashboard</span>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Emergency</h4>
+        <div class="footer-links">
+          <span class="footer-link" style="color:var(--red)">📞 16 108 (Ambulance)</span>
+          <span class="footer-link">📞 01711-834254</span>
+          <span class="footer-link">📧 help@bloodchai.com.bd</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 BloodChai Bangladesh. All rights reserved.</span>
+      <span>Made with ❤️ to save lives</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ==================== FIND DONOR PAGE ==================== -->
+<div class="page" id="page-find-donor">
+  <div class="section">
+    <div class="section-header">
+      <h1 class="section-title">🔍 Find a Blood Donor</h1>
+      <p class="section-subtitle">Search for compatible blood donors across Bangladesh. Filter by district, blood type, and availability.</p>
+    </div>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter by:</span>
+      <select class="filter-select form-control" id="filterDivision" onchange="filterDonors()" style="width:auto">
+        <option value="">All Divisions</option>
+        <option>Dhaka</option><option>Chittagong</option><option>Rajshahi</option>
+        <option>Khulna</option><option>Barishal</option><option>Sylhet</option>
+        <option>Mymensingh</option><option>Rangpur</option>
+      </select>
+      <select class="filter-select form-control" id="filterDistrict" onchange="filterDonors()" style="width:auto">
+        <option value="">All Districts</option>
+      </select>
+      <select class="filter-select form-control" id="filterBloodType" onchange="filterDonors()" style="width:auto">
+        <option value="">All Blood Types</option>
+        <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+        <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+      </select>
+      <select class="filter-select form-control" id="filterAvailability" onchange="filterDonors()" style="width:auto">
+        <option value="">All Donors</option>
+        <option value="active">Active Only</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="resetFilters()">Clear</button>
+    </div>
+
+    <div id="donorResultInfo" style="font-size:0.85rem;color:var(--text2);margin-bottom:1rem"></div>
+
+    <div class="grid-3" id="donorGrid">
+      <!-- Populated by JS -->
+    </div>
+    <div id="donorEmptyState" class="empty-state hidden">
+      <div class="empty-state-icon">🩸</div>
+      <div class="empty-state-title">No donors found</div>
+      <p>Try adjusting your filters to find available donors.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== BLOOD BANKS PAGE ==================== -->
+<div class="page" id="page-blood-banks">
+  <div class="section">
+    <div class="section-header">
+      <h1 class="section-title">🏥 Blood Banks in Bangladesh</h1>
+      <p class="section-subtitle">Official blood banks, hospitals, and collection centers across all divisions.</p>
+    </div>
+
+    <div class="filter-bar">
+      <span class="filter-label">Filter:</span>
+      <select class="filter-select form-control" id="bbFilterDivision" onchange="filterBanks()" style="width:auto">
+        <option value="">All Divisions</option>
+        <option>Dhaka</option><option>Chittagong</option><option>Rajshahi</option>
+        <option>Khulna</option><option>Sylhet</option><option>Barishal</option>
+        <option>Mymensingh</option><option>Rangpur</option>
+      </select>
+      <select class="filter-select form-control" id="bbFilterDistrict" onchange="filterBanks()" style="width:auto">
+        <option value="">All Districts</option>
+      </select>
+      <select class="filter-select form-control" id="bbFilterType" onchange="filterBanks()" style="width:auto">
+        <option value="">All Types</option>
+        <option value="govt">Government</option>
+        <option value="private">Private</option>
+        <option value="voluntary">Voluntary Org.</option>
+      </select>
+      <select class="filter-select form-control" id="bbFilterHours" onchange="filterBanks()" style="width:auto">
+        <option value="">Any Hours</option>
+        <option value="24h">24 Hours</option>
+      </select>
+      <button class="btn btn-ghost btn-sm" onclick="resetBankFilters()">Clear</button>
+    </div>
+
+    <div id="bankResultInfo" style="font-size:0.85rem;color:var(--text2);margin-bottom:1rem"></div>
+
+    <div class="grid-3" id="bankGrid">
+      <!-- Populated by JS -->
+    </div>
+    <div id="bankEmptyState" class="empty-state hidden">
+      <div class="empty-state-icon">🏥</div>
+      <div class="empty-state-title">No blood banks found</div>
+      <p>Try adjusting your filters.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== HOW IT WORKS PAGE ==================== -->
+<div class="page" id="page-how-it-works">
+  <div class="section">
+    <div class="section-header text-center">
+      <h1 class="section-title">How BloodChai Works</h1>
+      <p class="section-subtitle">A complete guide to our platform</p>
+    </div>
+
+    <div style="max-width:800px;margin:0 auto">
+      <div class="card mb-3" style="border-left:3px solid var(--red)">
+        <h3 class="syne" style="font-size:1.1rem;margin-bottom:1rem;color:var(--red)">🩸 For Blood Donors</h3>
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div class="flex items-center gap-2"><div class="badge badge-red">1</div><span class="text-sm">Register with your blood type, district, and contact info</span></div>
+          <div class="flex items-center gap-2"><div class="badge badge-red">2</div><span class="text-sm">Set your active status to appear in donor searches</span></div>
+          <div class="flex items-center gap-2"><div class="badge badge-red">3</div><span class="text-sm">Receive blood requests on your dashboard</span></div>
+          <div class="flex items-center gap-2"><div class="badge badge-red">4</div><span class="text-sm">Accept or decline requests. When you donate, your record is updated automatically</span></div>
+          <div class="flex items-center gap-2"><div class="badge badge-red">5</div><span class="text-sm">Wait at least 90 days between donations for safety</span></div>
+        </div>
+      </div>
+
+      <div class="card mb-3" style="border-left:3px solid var(--accent)">
+        <h3 class="syne" style="font-size:1.1rem;margin-bottom:1rem;color:var(--accent)">🏥 For Blood Recipients</h3>
+        <div style="display:flex;flex-direction:column;gap:0.75rem">
+          <div class="flex items-center gap-2"><div class="badge badge-yellow">1</div><span class="text-sm">Go to Find Donor and filter by district and blood type</span></div>
+          <div class="flex items-center gap-2"><div class="badge badge-yellow">2</div><span class="text-sm">Browse available donors (names and photos shown, contact info protected)</span></div>
+          <div class="flex items-center gap-2"><div class="badge badge-yellow">3</div><span class="text-sm">Click "Request Blood" and fill the contact form</span></div>
+          <div class="flex items-center gap-2"><div class="badge badge-yellow">4</div><span class="text-sm">The donor receives your request and can contact you directly</span></div>
+        </div>
+      </div>
+
+      <div class="card mb-3" style="border-left:3px solid var(--green)">
+        <h3 class="syne" style="font-size:1.1rem;margin-bottom:1rem;color:var(--green)">📋 Donation Rules (Bangladesh)</h3>
+        <div class="grid-2" style="gap:0.75rem">
+          <div class="text-sm flex items-center gap-2">✅ Must be 18–60 years old</div>
+          <div class="text-sm flex items-center gap-2">✅ Weight at least 50 kg</div>
+          <div class="text-sm flex items-center gap-2">✅ Hemoglobin ≥ 12.5 g/dL</div>
+          <div class="text-sm flex items-center gap-2">✅ 90 days between donations</div>
+          <div class="text-sm flex items-center gap-2">❌ No fever or illness</div>
+          <div class="text-sm flex items-center gap-2">❌ No recent surgery</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LOGIN PAGE ==================== -->
+<div class="page" id="page-login">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;min-height:calc(100vh - 64px)">
+    <div style="width:100%;max-width:420px">
+      <div class="text-center mb-3">
+        <div class="logo-icon" style="width:52px;height:52px;margin:0 auto 1rem;border-radius:14px">
+          <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:white"><path d="M12 2 C12 2 5 9 5 14 C5 17.87 8.13 21 12 21 C15.87 21 19 17.87 19 14 C19 9 12 2 12 2Z"/></svg>
+        </div>
+        <h1 class="section-title" style="font-size:1.75rem">Welcome Back</h1>
+        <p class="text-muted text-sm mt-1">Log in to your BloodChai account</p>
+      </div>
+      <div class="card">
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="form-control" id="loginEmail" placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" id="loginPassword" placeholder="Your password">
+          </div>
+          <button class="btn btn-primary w-full" onclick="handleLogin()" style="margin-top:0.5rem">Log In</button>
+          <div class="text-center text-sm text-muted">
+            Don't have an account?
+            <span style="color:var(--red-light);cursor:pointer" onclick="navigate('register')"> Register here</span>
+          </div>
+          <div class="divider"></div>
+          <div class="text-center text-xs text-muted">Demo: admin@bloodchai.com / donor@bloodchai.com — any password</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== REGISTER PAGE ==================== -->
+<div class="page" id="page-register">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;min-height:calc(100vh - 64px)">
+    <div style="width:100%;max-width:520px">
+      <div class="text-center mb-3">
+        <h1 class="section-title" style="font-size:1.75rem">Become a Donor</h1>
+        <p class="text-muted text-sm mt-1">Join thousands saving lives across Bangladesh</p>
+      </div>
+      <div class="card">
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" class="form-control" id="regFName" placeholder="Rahul">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" class="form-control" id="regLName" placeholder="Islam">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" class="form-control" id="regEmail" placeholder="you@example.com">
+          </div>
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="tel" class="form-control" id="regPhone" placeholder="017XXXXXXXX">
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Blood Type</label>
+              <select class="form-control" id="regBloodType">
+                <option value="">Select...</option>
+                <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date of Birth</label>
+              <input type="date" class="form-control" id="regDOB">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Division</label>
+              <select class="form-control" id="regDivision" onchange="updateDistrictOptions('regDistrict','regDivision')">
+                <option value="">Select...</option>
+                <option>Dhaka</option><option>Chittagong</option><option>Rajshahi</option>
+                <option>Khulna</option><option>Barishal</option><option>Sylhet</option>
+                <option>Mymensingh</option><option>Rangpur</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>District</label>
+              <select class="form-control" id="regDistrict">
+                <option value="">Select division first</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Full Address</label>
+            <input type="text" class="form-control" id="regAddress" placeholder="House, Road, Area">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" id="regPassword" placeholder="Min 8 characters">
+          </div>
+          <button class="btn btn-primary w-full" onclick="handleRegister()" style="margin-top:0.5rem">Create Account</button>
+          <div class="text-center text-sm text-muted">
+            Already a donor?
+            <span style="color:var(--red-light);cursor:pointer" onclick="navigate('login')"> Log in</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DONOR DASHBOARD ==================== -->
+<div class="page" id="page-donor-dashboard">
+  <div class="dashboard-layout">
+    <div class="sidebar" id="donorSidebar">
+      <div class="flex items-center gap-2 mb-3" style="padding:0.5rem">
+        <div class="avatar-placeholder" id="sidebarAvatar" style="width:44px;height:44px;font-size:1rem;background:var(--red-subtle);color:var(--red);border-color:rgba(232,39,42,0.3)">R</div>
+        <div>
+          <div style="font-weight:600;font-size:0.9rem" id="sidebarName">Rahim Uddin</div>
+          <div class="text-xs text-muted" id="sidebarBloodType">A+ Donor</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="sidebar-nav">
+        <div class="sidebar-section">Dashboard</div>
+        <button class="sidebar-item active" onclick="showDonorPanel('overview')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </button>
+        <button class="sidebar-item" onclick="showDonorPanel('requests')" id="reqsNavBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Blood Requests
+          <div class="notif-dot" id="reqsNotifDot"></div>
+        </button>
+        <button class="sidebar-item" onclick="showDonorPanel('history')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Donation History
+        </button>
+        <div class="sidebar-section">Settings</div>
+        <button class="sidebar-item" onclick="showDonorPanel('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Edit Profile
+        </button>
+        <button class="sidebar-item" onclick="handleLogout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Log Out
+        </button>
+      </div>
+    </div>
+
+    <div class="main-content" id="donorMainContent">
+      <!-- Populated by showDonorPanel() -->
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ADMIN DASHBOARD ==================== -->
+<div class="page" id="page-admin-dashboard">
+  <div class="dashboard-layout">
+    <div class="sidebar" id="adminSidebar">
+      <div class="flex items-center gap-2 mb-3" style="padding:0.5rem">
+        <div class="avatar-placeholder" style="width:44px;height:44px;font-size:0.8rem;font-weight:700;background:rgba(52,152,219,0.15);color:#5dade2;border-color:rgba(52,152,219,0.3)">ADM</div>
+        <div>
+          <div style="font-weight:600;font-size:0.9rem">Admin Panel</div>
+          <div class="text-xs text-muted">BloodChai Admin</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="sidebar-nav">
+        <div class="sidebar-section">Management</div>
+        <button class="sidebar-item active" onclick="showAdminPanel('overview')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Overview
+        </button>
+        <button class="sidebar-item" onclick="showAdminPanel('users')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          All Users
+        </button>
+        <button class="sidebar-item" onclick="showAdminPanel('declined')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Declined Requests
+          <div class="notif-dot"></div>
+        </button>
+        <button class="sidebar-item" onclick="showAdminPanel('requests')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          All Requests
+        </button>
+        <div class="sidebar-section">Other</div>
+        <button class="sidebar-item" onclick="handleLogout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Log Out
+        </button>
+      </div>
+    </div>
+    <div class="main-content" id="adminMainContent">
+      <!-- Populated by showAdminPanel() -->
+    </div>
+  </div>
+</div>
+
+</div><!-- end #app -->
+
+<script>
+// ==================== DATA ====================
+const DISTRICTS = {
+  'Dhaka':['Dhaka','Gazipur','Narayanganj','Narsingdi','Manikganj','Munshiganj','Faridpur','Gopalganj','Madaripur','Rajbari','Shariatpur','Tangail','Kishoreganj'],
+  'Chittagong':['Chittagong','Cox\'s Bazar','Bandarban','Rangamati','Khagrachhari','Feni','Lakshmipur','Noakhali','Comilla','Chandpur','Brahmanbaria'],
+  'Rajshahi':['Rajshahi','Bogra','Natore','Naogaon','Joypurhat','Chapainawabganj','Sirajganj','Pabna'],
+  'Khulna':['Khulna','Bagerhat','Satkhira','Jessore','Narail','Magura','Jhenaidah','Kushtia','Meherpur','Chuadanga'],
+  'Barishal':['Barishal','Bhola','Patuakhali','Pirojpur','Jhalokati','Barguna'],
+  'Sylhet':['Sylhet','Moulvibazar','Habiganj','Sunamganj'],
+  'Mymensingh':['Mymensingh','Netrokona','Sherpur','Jamalpur'],
+  'Rangpur':['Rangpur','Dinajpur','Nilphamari','Gaibandha','Kurigram','Lalmonirhat','Thakurgaon','Panchagarh']
+};
+
+const BLOOD_COLORS = {'A+':'bt-ap','A-':'bt-an','B+':'bt-bp','B-':'bt-bn','O+':'bt-op','O-':'bt-on','AB+':'bt-abp','AB-':'bt-abn'};
+const AVATAR_COLORS = ['#c0392b','#e74c3c','#e67e22','#d35400','#8e44ad','#2980b9','#16a085','#27ae60'];
+
+// State
+let currentUser = null;
+let currentPage = 'home';
+
+// Sample donors data
+let donors = [
+  {id:1,name:'Md. Rahim Uddin',blood:'A+',division:'Dhaka',district:'Dhaka',area:'Mirpur',active:true,lastDonation:null,photo:null,history:[],joinDate:'2024-01-15',phone:'01711234567',email:'donor@bloodchai.com'},
+  {id:2,name:'Fatema Khatun',blood:'O+',division:'Dhaka',district:'Dhaka',area:'Dhanmondi',active:true,lastDonation:90,photo:null,history:[{date:'2024-12-26',recipient:'Dhaka Medical'}],joinDate:'2023-08-20',phone:'01891234567',email:'fatema@example.com'},
+  {id:3,name:'Karim Hossain',blood:'B+',division:'Chittagong',district:'Chittagong',area:'Agrabad',active:true,lastDonation:45,photo:null,history:[{date:'2025-02-08',recipient:'CMCH'}],joinDate:'2023-11-05',phone:'01712345678',email:'karim@example.com'},
+  {id:4,name:'Nasrin Akter',blood:'A-',division:'Dhaka',district:'Narayanganj',area:'Siddhirganj',active:false,lastDonation:120,photo:null,history:[{date:'2024-11-26',recipient:'Narayanganj Hospital'},{date:'2024-07-30',recipient:'General Hospital'}],joinDate:'2022-05-10',phone:'01813456789',email:'nasrin@example.com'},
+  {id:5,name:'Jamal Uddin',blood:'O-',division:'Rajshahi',district:'Rajshahi',area:'Shaheb Bazar',active:true,lastDonation:200,photo:null,history:[{date:'2024-09-07',recipient:'Rajshahi Medical'}],joinDate:'2023-03-22',phone:'01924567890',email:'jamal@example.com'},
+  {id:6,name:'Shirin Begum',blood:'AB+',division:'Khulna',district:'Khulna',area:'Sonadanga',active:true,lastDonation:null,photo:null,history:[],joinDate:'2024-06-14',phone:'01756789012',email:'shirin@example.com'},
+  {id:7,name:'Rashed Khan',blood:'B-',division:'Sylhet',district:'Sylhet',area:'Zindabazar',active:true,lastDonation:150,photo:null,history:[{date:'2024-10-27',recipient:'Sylhet MAG Osmani Hospital'}],joinDate:'2023-09-30',phone:'01678901234',email:'rashed@example.com'},
+  {id:8,name:'Parveen Sultana',blood:'A+',division:'Dhaka',district:'Gazipur',area:'Tongi',active:true,lastDonation:95,photo:null,history:[{date:'2024-12-21',recipient:'Gazipur General'}],joinDate:'2023-07-07',phone:'01589012345',email:'parveen@example.com'},
+  {id:9,name:'Anisur Rahman',blood:'O+',division:'Barishal',district:'Barishal',area:'Nathullabad',active:true,lastDonation:null,photo:null,history:[],joinDate:'2025-01-02',phone:'01490123456',email:'anisur@example.com'},
+  {id:10,name:'Taslima Islam',blood:'AB-',division:'Mymensingh',district:'Mymensingh',area:'Town',active:false,lastDonation:60,photo:null,history:[{date:'2025-01-24',recipient:'Mymensingh Medical'}],joinDate:'2023-04-18',phone:'01341234567',email:'taslima@example.com'},
+  {id:11,name:'Bellal Hossain',blood:'A+',division:'Chittagong',district:'Comilla',area:'Kandirpar',active:true,lastDonation:180,photo:null,history:[{date:'2024-09-28',recipient:'Comilla Medical'}],joinDate:'2022-12-01',phone:'01622345678',email:'bellal@example.com'},
+  {id:12,name:'Mahmuda Khanam',blood:'B+',division:'Dhaka',district:'Dhaka',area:'Uttara',active:true,lastDonation:null,photo:null,history:[],joinDate:'2025-02-10',phone:'01733456789',email:'mahmuda@example.com'},
+];
+
+// Blood request history
+let bloodRequests = [
+  {id:1,donorId:1,recipientName:'Jakir Hossain',hospital:'Dhaka Medical College Hospital, Bakshibazar',mobile:'01755667788',urgency:'critical',notes:'Emergency surgery required',status:'pending',date:new Date(Date.now()-2*3600000).toISOString()},
+  {id:2,donorId:2,recipientName:'Sumaiya Akter',hospital:'Square Hospital, Panthapath',mobile:'01644556677',urgency:'high',notes:'Post-surgery recovery',status:'accepted',date:new Date(Date.now()-5*24*3600000).toISOString(),acceptedDate:new Date(Date.now()-5*24*3600000).toISOString()},
+  {id:3,donorId:3,recipientName:'Iftekhar Ahmed',hospital:'CMCH, Chittagong',mobile:'01533445566',urgency:'normal',notes:'Scheduled surgery next week',status:'declined',date:new Date(Date.now()-10*24*3600000).toISOString(),declineReason:'Unavailable due to health issues'},
+  {id:4,donorId:1,recipientName:'Razia Begum',hospital:'Apollo Hospital Dhaka',mobile:'01422334455',urgency:'high',notes:'Road accident victim',status:'pending',date:new Date(Date.now()-1*3600000).toISOString()},
+];
+
+const bloodBanks = [
+  {id:1,name:'Dhaka Medical College Hospital Blood Bank',division:'Dhaka',district:'Dhaka',address:'Bakshibazar, Dhaka-1000',phone:'02-55165088, 02-55165090',email:'info@dmch.gov.bd',type:'govt',hours:'24h',tags:['Government','24/7','Emergency']},
+  {id:2,name:'Quantum Foundation Blood Center',division:'Dhaka',district:'Dhaka',address:'149 Monipuripara, Tejgaon, Dhaka-1215',phone:'01713-489910, 01713-489911',email:'blood@quantummethod.org',type:'voluntary',hours:'24h',tags:['Voluntary','24/7','Free']},
+  {id:3,name:'Bangladesh Red Crescent Blood Centre',division:'Dhaka',district:'Dhaka',address:'684-686 Bara Moghbazar, Dhaka-1217',phone:'02-8317543, 02-8310641',email:'bloodservice@bdrcs.org',type:'voluntary',hours:'normal',tags:['Red Crescent','Voluntary']},
+  {id:4,name:'Chittagong Medical College Hospital Blood Bank',division:'Chittagong',district:'Chittagong',address:'K B Fazlul Kader Road, Chittagong-4000',phone:'031-636083',email:'cmch@gov.bd',type:'govt',hours:'24h',tags:['Government','24/7']},
+  {id:5,name:'Sandhani Chittagong Unit',division:'Chittagong',district:'Chittagong',address:'CMCH Campus, Chittagong',phone:'031-2553453',email:'sandhani.ctg@gmail.com',type:'voluntary',hours:'normal',tags:['Voluntary','Student Org.']},
+  {id:6,name:'Rajshahi Medical College Blood Bank',division:'Rajshahi',district:'Rajshahi',address:'Rajshahi Medical College, Rajpara, Rajshahi',phone:'0721-772150',email:'rmcbb@gov.bd',type:'govt',hours:'24h',tags:['Government','24/7']},
+  {id:7,name:'Khulna Medical College Blood Bank',division:'Khulna',district:'Khulna',address:'KMC Road, Khulna-9000',phone:'041-762440',email:'kmcbb@gov.bd',type:'govt',hours:'normal',tags:['Government']},
+  {id:8,name:'Sylhet MAG Osmani Hospital Blood Bank',division:'Sylhet',district:'Sylhet',address:'MAG Osmani Medical College, Sylhet',phone:'0821-716471',email:'osmanibb@gov.bd',type:'govt',hours:'24h',tags:['Government','24/7']},
+  {id:9,name:'Barishal Sher-e-Bangla Medical Blood Bank',division:'Barishal',district:'Barishal',address:'Sher-e-Bangla Medical College, Barishal',phone:'0431-63121',email:'sbmcbb@gov.bd',type:'govt',hours:'normal',tags:['Government']},
+  {id:10,name:'Mymensingh Medical College Blood Bank',division:'Mymensingh',district:'Mymensingh',address:'Mymensingh Medical College Road, Mymensingh',phone:'091-67521',email:'mmcbb@gov.bd',type:'govt',hours:'normal',tags:['Government']},
+  {id:11,name:'Square Hospital Blood Bank',division:'Dhaka',district:'Dhaka',address:'18/F Bir Uttam Qazi Nuruzzaman Sarak, West Panthapath, Dhaka',phone:'02-8159457',email:'blood@squarehospital.com',type:'private',hours:'24h',tags:['Private','24/7']},
+  {id:12,name:'Rangpur Medical College Blood Bank',division:'Rangpur',district:'Rangpur',address:'Rangpur Medical College, Rangpur',phone:'0521-63161',email:'rmcbb.rng@gov.bd',type:'govt',hours:'normal',tags:['Government']},
+];
+
+// ==================== NAVIGATION ====================
+function navigate(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const el = document.getElementById('page-'+page);
+  if(el){ el.classList.add('active'); window.scrollTo(0,0); }
+  currentPage = page;
+  // Update nav links
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const map = {'home':0,'find-donor':1,'blood-banks':2,'how-it-works':3};
+  if(map[page]!==undefined) document.querySelectorAll('.nav-link')[map[page]]?.classList.add('active');
+  // Update nav based on auth
+  updateNavAuth();
+  // Init pages
+  if(page==='find-donor') renderDonors();
+  if(page==='blood-banks') renderBanks();
+  if(page==='donor-dashboard') initDonorDashboard();
+  if(page==='admin-dashboard') initAdminDashboard();
+}
+
+function updateNavAuth(){
+  const navActions = document.getElementById('navActions');
+  if(currentUser){
+    if(currentUser.role==='admin'){
+      navActions.innerHTML=`<span class="text-sm text-muted mr-2">${currentUser.name}</span><button class="nav-btn btn-red" onclick="navigate('admin-dashboard')">Admin Panel</button>`;
+    } else {
+      navActions.innerHTML=`<button class="nav-btn btn-outline" onclick="navigate('donor-dashboard')">Dashboard</button><button class="nav-btn btn-red" onclick="handleLogout()">Logout</button>`;
+    }
+  } else {
+    navActions.innerHTML=`<button class="nav-btn btn-outline" onclick="navigate('login')">Log in</button><button class="nav-btn btn-red" onclick="navigate('register')">Donate Blood</button>`;
+  }
+}
+
+function toggleMobileMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+// ==================== AUTH ====================
+function handleLogin(){
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPassword').value;
+  if(!email||!pass){ showToast('Please fill all fields','error'); return; }
+
+  if(email==='admin@bloodchai.com'){
+    currentUser = {id:0,role:'admin',name:'Admin',email};
+    showToast('Welcome, Admin!','success');
+    navigate('admin-dashboard');
+  } else {
+    const donor = donors.find(d=>d.email===email) || donors[0];
+    currentUser = {id:donor.id,role:'donor',name:donor.name,email:donor.email,donorId:donor.id};
+    // Update donor 0 to logged in user
+    showToast(`Welcome back, ${donor.name.split(' ')[0]}!`,'success');
+    navigate('donor-dashboard');
+  }
+}
+
+function handleRegister(){
+  const fname=document.getElementById('regFName').value;
+  const lname=document.getElementById('regLName').value;
+  const email=document.getElementById('regEmail').value;
+  const phone=document.getElementById('regPhone').value;
+  const blood=document.getElementById('regBloodType').value;
+  const division=document.getElementById('regDivision').value;
+  const district=document.getElementById('regDistrict').value;
+  const address=document.getElementById('regAddress').value;
+
+  if(!fname||!email||!phone||!blood||!division||!district){
+    showToast('Please fill all required fields','error'); return;
+  }
+  const newDonor = {
+    id:donors.length+1,name:`${fname} ${lname}`,blood,division,district,
+    area:address,active:true,lastDonation:null,photo:null,history:[],
+    joinDate:new Date().toISOString().split('T')[0],phone,email
+  };
+  donors.push(newDonor);
+  currentUser = {id:newDonor.id,role:'donor',name:newDonor.name,email,donorId:newDonor.id};
+  showToast(`Welcome to BloodChai, ${fname}! 🩸`,'success');
+  navigate('donor-dashboard');
+}
+
+function handleLogout(){
+  currentUser = null;
+  showToast('Logged out successfully','info');
+  navigate('home');
+}
+
+// ==================== DISTRICTS ====================
+function updateDistrictOptions(targetId, srcId){
+  const div = document.getElementById(srcId)?.value;
+  const target = document.getElementById(targetId);
+  if(!target) return;
+  target.innerHTML = '<option value="">Select district</option>';
+  if(div && DISTRICTS[div]){
+    DISTRICTS[div].forEach(d=>{
+      const o=document.createElement('option'); o.value=d; o.textContent=d; target.appendChild(o);
+    });
+  }
+}
+
+// Populate district dropdowns when division changes in filter bars
+document.getElementById('filterDivision').addEventListener('change',function(){
+  const target = document.getElementById('filterDistrict');
+  target.innerHTML='<option value="">All Districts</option>';
+  if(this.value && DISTRICTS[this.value]){
+    DISTRICTS[this.value].forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;target.appendChild(o);});
+  }
+  filterDonors();
+});
+document.getElementById('bbFilterDivision').addEventListener('change',function(){
+  const target = document.getElementById('bbFilterDistrict');
+  target.innerHTML='<option value="">All Districts</option>';
+  if(this.value && DISTRICTS[this.value]){
+    DISTRICTS[this.value].forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;target.appendChild(o);});
+  }
+  filterBanks();
+});
+
+// ==================== DONOR RENDERING ====================
+function renderDonors(){
+  const div = document.getElementById('filterDivision').value;
+  const district = document.getElementById('filterDistrict').value;
+  const blood = document.getElementById('filterBloodType').value;
+  const avail = document.getElementById('filterAvailability').value;
+
+  let filtered = donors.filter(d=>{
+    if(div && d.division!==div) return false;
+    if(district && d.district!==district) return false;
+    if(blood && d.blood!==blood) return false;
+    if(avail==='active' && !d.active) return false;
+    return true;
+  });
+
+  const grid = document.getElementById('donorGrid');
+  const empty = document.getElementById('donorEmptyState');
+  const info = document.getElementById('donorResultInfo');
+  info.textContent = filtered.length + ' donor' + (filtered.length!==1?'s':'') + ' found';
+
+  if(filtered.length===0){
+    grid.innerHTML=''; empty.classList.remove('hidden'); return;
+  }
+  empty.classList.add('hidden');
+  grid.innerHTML = filtered.map(d=>donorCardHTML(d)).join('');
+}
+
+function donorCardHTML(d){
+  const initials = d.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+  const color = AVATAR_COLORS[d.id % AVATAR_COLORS.length];
+  const btClass = BLOOD_COLORS[d.blood]||'bt-ap';
+  const lastDonStr = d.lastDonation ? `${d.lastDonation} days ago` : 'Never donated';
+  const eligible = d.lastDonation===null || d.lastDonation>=90;
+  return `<div class="donor-card" onclick="openRequestModal(${d.id})">
+    <div class="donor-card-header">
+      ${d.photo ? `<img class="donor-avatar" src="${d.photo}" alt="">` : `<div class="donor-avatar-placeholder" style="background:${color}22;color:${color};border-color:${color}44">${initials}</div>`}
+      <div class="donor-info">
+        <div class="donor-name">${d.name}</div>
+        <div class="donor-district">📍 ${d.district}${d.area?', '+d.area:''}</div>
+      </div>
+      <div class="blood-type ${btClass}">${d.blood}</div>
+    </div>
+    <div class="donor-meta">
+      <span class="badge ${d.active?'badge-green':'badge-gray'}">
+        <span class="status-dot ${d.active?'status-active':'status-inactive'}"></span>
+        ${d.active?'Active':'Inactive'}
+      </span>
+      ${eligible && d.active ? '<span class="badge badge-green">Eligible</span>' : d.active ? '<span class="badge badge-yellow">Cooling off</span>' : ''}
+    </div>
+    <div class="donor-last-donation mt-1">Last donation: ${lastDonStr}</div>
+    ${d.active ? `<button class="btn btn-primary btn-sm w-full mt-2" onclick="event.stopPropagation();openRequestModal(${d.id})">🩸 Request Blood</button>` : '<button class="btn btn-ghost btn-sm w-full mt-2" disabled>Currently Inactive</button>'}
+  </div>`;
+}
+
+function filterDonors(){ renderDonors(); }
+function resetFilters(){
+  document.getElementById('filterDivision').value='';
+  document.getElementById('filterDistrict').value='';
+  document.getElementById('filterBloodType').value='';
+  document.getElementById('filterAvailability').value='';
+  document.getElementById('filterDistrict').innerHTML='<option value="">All Districts</option>';
+  renderDonors();
+}
+
+// ==================== BLOOD BANKS RENDERING ====================
+function renderBanks(){
+  const div = document.getElementById('bbFilterDivision').value;
+  const district = document.getElementById('bbFilterDistrict').value;
+  const type = document.getElementById('bbFilterType').value;
+  const hours = document.getElementById('bbFilterHours').value;
+
+  let filtered = bloodBanks.filter(b=>{
+    if(div && b.division!==div) return false;
+    if(district && b.district!==district) return false;
+    if(type && b.type!==type) return false;
+    if(hours==='24h' && b.hours!=='24h') return false;
+    return true;
+  });
+
+  const grid = document.getElementById('bankGrid');
+  const empty = document.getElementById('bankEmptyState');
+  const info = document.getElementById('bankResultInfo');
+  info.textContent = filtered.length + ' blood bank' + (filtered.length!==1?'s':'') + ' found';
+
+  if(filtered.length===0){
+    grid.innerHTML=''; empty.classList.remove('hidden'); return;
+  }
+  empty.classList.add('hidden');
+  grid.innerHTML = filtered.map(b=>bankCardHTML(b)).join('');
+}
+
+function bankCardHTML(b){
+  const typeColors = {govt:'badge-red',private:'badge-yellow',voluntary:'badge-green'};
+  const typeLabels = {govt:'Government',private:'Private',voluntary:'Voluntary'};
+  return `<div class="bank-card">
+    <div class="bank-card-header">
+      <div>
+        <div class="bank-name">${b.name}</div>
+        <div class="text-xs text-muted mt-1">📍 ${b.district}, ${b.division}</div>
+      </div>
+      <div class="badge ${typeColors[b.type]||'badge-gray'}">${typeLabels[b.type]||b.type}</div>
+    </div>
+    <div class="bank-address">🏠 ${b.address}</div>
+    <div class="bank-contact">📞 <a href="tel:${b.phone}">${b.phone}</a></div>
+    ${b.email?`<div class="bank-contact">✉️ <a href="mailto:${b.email}">${b.email}</a></div>`:''}
+    <div class="bank-tags">
+      ${b.tags.map(t=>`<span class="badge badge-gray">${t}</span>`).join('')}
+      ${b.hours==='24h'?'<span class="badge badge-green">🕐 24/7</span>':'<span class="badge badge-gray">Day Hours</span>'}
+    </div>
+  </div>`;
+}
+
+function filterBanks(){ renderBanks(); }
+function resetBankFilters(){
+  document.getElementById('bbFilterDivision').value='';
+  document.getElementById('bbFilterDistrict').value='';
+  document.getElementById('bbFilterType').value='';
+  document.getElementById('bbFilterHours').value='';
+  document.getElementById('bbFilterDistrict').innerHTML='<option value="">All Districts</option>';
+  renderBanks();
+}
+
+// ==================== REQUEST MODAL ====================
+function openRequestModal(donorId){
+  const donor = donors.find(d=>d.id===donorId);
+  if(!donor) return;
+  const btClass = BLOOD_COLORS[donor.blood]||'bt-ap';
+  const initials = donor.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+  const color = AVATAR_COLORS[donor.id % AVATAR_COLORS.length];
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">🩸 Request Blood</div>
+        <div class="text-sm text-muted mt-1">Your request will be sent to the donor's dashboard</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="flex items-center gap-2 mb-3" style="background:var(--bg3);border-radius:12px;padding:1rem;gap:12px">
+      <div class="donor-avatar-placeholder" style="width:46px;height:46px;font-size:1rem;background:${color}22;color:${color};border-color:${color}44;flex-shrink:0">${initials}</div>
+      <div>
+        <div style="font-weight:600">${donor.name}</div>
+        <div class="text-sm text-muted">📍 ${donor.district}</div>
+      </div>
+      <div class="blood-type ${btClass}" style="margin-left:auto">${donor.blood}</div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div class="form-group">
+        <label>Your Full Name *</label>
+        <input type="text" class="form-control" id="reqName" placeholder="Recipient name">
+      </div>
+      <div class="form-group">
+        <label>Hospital & Address *</label>
+        <input type="text" class="form-control" id="reqHospital" placeholder="Hospital name and full address">
+      </div>
+      <div class="form-group">
+        <label>Mobile Number *</label>
+        <input type="tel" class="form-control" id="reqMobile" placeholder="01X-XXXXXXXX">
+      </div>
+      <div class="form-group">
+        <label>Urgency Level *</label>
+        <select class="form-control" id="reqUrgency">
+          <option value="">Select urgency...</option>
+          <option value="critical">🔴 Critical — Life threatening emergency</option>
+          <option value="high">🟠 High — Within 24 hours</option>
+          <option value="normal">🟢 Normal — Within 3–7 days</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Additional Notes</label>
+        <textarea class="form-control" id="reqNotes" placeholder="Any additional information for the donor..."></textarea>
+      </div>
+      <button class="btn btn-primary w-full" onclick="submitRequest(${donorId})">Send Blood Request →</button>
+    </div>
+  `;
+  openModal();
+}
+
+function submitRequest(donorId){
+  const name=document.getElementById('reqName').value;
+  const hospital=document.getElementById('reqHospital').value;
+  const mobile=document.getElementById('reqMobile').value;
+  const urgency=document.getElementById('reqUrgency').value;
+  const notes=document.getElementById('reqNotes').value;
+
+  if(!name||!hospital||!mobile||!urgency){
+    showToast('Please fill all required fields','error'); return;
+  }
+
+  const newReq = {
+    id:bloodRequests.length+1, donorId, recipientName:name, hospital, mobile,
+    urgency, notes, status:'pending', date:new Date().toISOString()
+  };
+  bloodRequests.push(newReq);
+  closeModal();
+  showToast('Request sent! The donor will be notified.','success');
+}
+
+// ==================== DONOR DASHBOARD ====================
+function initDonorDashboard(){
+  const d = donors.find(dn=>dn.id===(currentUser?.donorId||1)) || donors[0];
+  const initials = d.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+  const color = AVATAR_COLORS[d.id % AVATAR_COLORS.length];
+  const avatarEl = document.getElementById('sidebarAvatar');
+  if(avatarEl){
+    avatarEl.textContent=initials;
+    avatarEl.style.background=color+'22';
+    avatarEl.style.color=color;
+    avatarEl.style.borderColor=color+'44';
+  }
+  document.getElementById('sidebarName').textContent = d.name;
+  document.getElementById('sidebarBloodType').textContent = d.blood + ' Donor';
+
+  const pendingReqs = bloodRequests.filter(r=>r.donorId===d.id&&r.status==='pending');
+  document.getElementById('reqsNotifDot').style.display = pendingReqs.length>0 ? 'block':'none';
+  showDonorPanel('overview');
+}
+
+function showDonorPanel(panel){
+  document.querySelectorAll('#donorSidebar .sidebar-item').forEach(i=>i.classList.remove('active'));
+  const panels = ['overview','requests','history','profile'];
+  const idx = panels.indexOf(panel);
+  if(idx>=0) document.querySelectorAll('#donorSidebar .sidebar-item')[idx]?.classList.add('active');
+
+  const d = donors.find(dn=>dn.id===(currentUser?.donorId||1)) || donors[0];
+  const content = document.getElementById('donorMainContent');
+
+  if(panel==='overview') content.innerHTML = renderDonorOverview(d);
+  else if(panel==='requests') content.innerHTML = renderDonorRequests(d);
+  else if(panel==='history') content.innerHTML = renderDonorHistory(d);
+  else if(panel==='profile') content.innerHTML = renderDonorProfile(d);
+}
+
+function renderDonorOverview(d){
+  const myRequests = bloodRequests.filter(r=>r.donorId===d.id);
+  const pending = myRequests.filter(r=>r.status==='pending').length;
+  const totalDonations = d.history.length;
+  const lastDon = d.lastDonation;
+  const eligible = lastDon===null || lastDon>=90;
+  const daysToEligible = lastDon&&lastDon<90 ? 90-lastDon : 0;
+  const btClass = BLOOD_COLORS[d.blood]||'bt-ap';
+  const initials = d.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+  const color = AVATAR_COLORS[d.id % AVATAR_COLORS.length];
+
+  return `
+    <div class="section-header">
+      <h2 class="section-title">Dashboard Overview</h2>
+      <p class="section-subtitle">Welcome back, ${d.name.split(' ')[0]}!</p>
+    </div>
+
+    <div class="grid-4 mb-3">
+      <div class="card card-sm text-center">
+        <div class="blood-type ${btClass}" style="margin:0 auto 8px">${d.blood}</div>
+        <div class="text-xs text-muted">Blood Type</div>
+      </div>
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.4rem;color:var(--red)">${totalDonations}</div>
+        <div class="text-xs text-muted">Total Donations</div>
+      </div>
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.4rem;color:${pending>0?'var(--yellow)':'var(--green)'}">${pending}</div>
+        <div class="text-xs text-muted">Pending Requests</div>
+      </div>
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.4rem;color:${eligible?'var(--green)':'var(--yellow)'}">${eligible?'Ready':'${daysToEligible}d'}</div>
+        <div class="text-xs text-muted">${eligible?'Eligible to Donate':'Days to Eligible'}</div>
+      </div>
+    </div>
+
+    <div class="grid-2 mb-3">
+      <div class="card">
+        <div class="flex items-center gap-2 mb-2" style="gap:12px">
+          ${d.photo ? `<img style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--border2)" src="${d.photo}">` : `<div style="width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;font-family:'Syne';background:${color}22;color:${color};border:3px solid ${color}44;flex-shrink:0">${initials}</div>`}
+          <div>
+            <div style="font-weight:700;font-size:1.1rem">${d.name}</div>
+            <div class="text-sm text-muted">📍 ${d.district}, ${d.division}</div>
+            <div class="flex items-center gap-2 mt-1" style="gap:8px">
+              <span class="badge ${d.active?'badge-green':'badge-gray'}">
+                <span class="status-dot ${d.active?'status-active':'status-inactive'}"></span>
+                ${d.active?'Active':'Inactive'}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="toggle-wrap">
+          <label class="toggle">
+            <input type="checkbox" ${d.active?'checked':''} onchange="toggleDonorStatus(${d.id},this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="text-sm">${d.active?'Showing as available to donors':'Hidden from donor search'}</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 class="syne mb-2" style="font-size:0.9rem;font-weight:700;margin-bottom:12px">Donation Eligibility</h4>
+        ${eligible ? `
+          <div class="badge badge-green mb-2">✓ Eligible to Donate</div>
+          <div class="text-sm text-muted">${lastDon===null ? 'You have never donated. You are fully eligible!' : `Last donation was ${lastDon} days ago. Ready to donate again.`}</div>
+        ` : `
+          <div class="badge badge-yellow mb-2">⏳ Cooling Period</div>
+          <div class="text-sm text-muted">Last donation ${lastDon} days ago. You'll be eligible in ${daysToEligible} more days.</div>
+          <div class="progress-bar mt-2"><div class="progress-fill" style="width:${(lastDon/90)*100}%"></div></div>
+          <div class="text-xs text-muted mt-1">${lastDon}/90 days</div>
+        `}
+      </div>
+    </div>
+
+    ${pending>0 ? `
+    <div class="card card-red mb-3">
+      <div class="flex items-center justify-between mb-2">
+        <h4 class="syne" style="font-size:1rem;font-weight:700">⚡ Pending Blood Requests (${pending})</h4>
+        <button class="btn btn-ghost btn-sm" onclick="showDonorPanel('requests')">View All →</button>
+      </div>
+      ${bloodRequests.filter(r=>r.donorId===d.id&&r.status==='pending').slice(0,2).map(r=>requestCardHTML(r,d)).join('')}
+    </div>
+    ` : ''}
+  `;
+}
+
+function requestCardHTML(r, d){
+  const urgencyMap = {critical:'badge-urgent urgency-critical',high:'badge-yellow urgency-high',normal:'badge-gray urgency-normal'};
+  const urgencyLabel = {critical:'🔴 Critical',high:'🟠 High',normal:'🟢 Normal'};
+  const timeAgo = getTimeAgo(r.date);
+  return `
+    <div class="request-card ${r.urgency==='critical'?'urgent':''}">
+      <div class="request-header">
+        <div>
+          <div class="request-title">${r.recipientName}</div>
+          <div class="text-xs text-muted">${timeAgo}</div>
+        </div>
+        <span class="badge ${urgencyMap[r.urgency]||'badge-gray'}">${urgencyLabel[r.urgency]||r.urgency}</span>
+      </div>
+      <div class="request-meta">
+        <span>🏥 ${r.hospital}</span>
+        <span>📞 ${r.mobile}</span>
+        ${r.notes?`<span>📝 ${r.notes}</span>`:''}
+      </div>
+      ${r.status==='pending' ? `
+      <div class="request-actions">
+        <button class="btn btn-success btn-sm" onclick="handleRequest(${r.id},'accepted')">✓ Accept</button>
+        <button class="btn btn-danger btn-sm" onclick="openDeclineModal(${r.id})">✕ Decline</button>
+      </div>` : `<div class="badge ${r.status==='accepted'?'badge-green':'badge-gray'} mt-2">${r.status==='accepted'?'✓ Accepted':'✕ Declined'}</div>`}
+    </div>
+  `;
+}
+
+function renderDonorRequests(d){
+  const myRequests = bloodRequests.filter(r=>r.donorId===d.id);
+  return `
+    <div class="section-header">
+      <h2 class="section-title">Blood Requests</h2>
+      <p class="section-subtitle">Review and respond to incoming blood requests</p>
+    </div>
+    ${myRequests.length===0 ? '<div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-title">No requests yet</div><p>When someone requests your blood, it will appear here.</p></div>' :
+    `<div style="display:flex;flex-direction:column;gap:1rem">${myRequests.map(r=>requestCardHTML(r,d)).join('')}</div>`}
+  `;
+}
+
+function renderDonorHistory(d){
+  const donorDonations = d.history||[];
+  return `
+    <div class="section-header">
+      <h2 class="section-title">Donation History</h2>
+      <p class="section-subtitle">Your complete donation track record</p>
+    </div>
+
+    <div class="grid-3 mb-3">
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.5rem;color:var(--red)">${donorDonations.length}</div>
+        <div class="text-xs text-muted">Total Donations</div>
+      </div>
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.5rem;color:var(--accent)">${donorDonations.length*450}ml</div>
+        <div class="text-xs text-muted">Blood Donated</div>
+      </div>
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.5rem;color:var(--green)">${d.lastDonation!==null?d.lastDonation+'d':'—'}</div>
+        <div class="text-xs text-muted">Days Since Last Donation</div>
+      </div>
+    </div>
+
+    ${donorDonations.length===0 ? '<div class="empty-state"><div class="empty-state-icon">🩸</div><div class="empty-state-title">No donations yet</div><p>Your donation history will appear here once you accept and complete a donation.</p></div>' : `
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>#</th><th>Date</th><th>Recipient / Organization</th><th>Status</th></tr></thead>
+        <tbody>
+          ${donorDonations.map((h,i)=>`
+          <tr>
+            <td class="text-muted">${i+1}</td>
+            <td style="font-weight:500">${formatDate(h.date)}</td>
+            <td>${h.recipient||'—'}</td>
+            <td><span class="badge badge-green">✓ Completed</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`}
+  `;
+}
+
+function renderDonorProfile(d){
+  const btClass = BLOOD_COLORS[d.blood]||'bt-ap';
+  const initials = d.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+  const color = AVATAR_COLORS[d.id % AVATAR_COLORS.length];
+  const nameParts = d.name.split(' ');
+
+  return `
+    <div class="section-header">
+      <h2 class="section-title">Edit Profile</h2>
+      <p class="section-subtitle">Keep your information updated for accurate donor searches</p>
+    </div>
+
+    <div class="card mb-3">
+      <div class="flex items-center gap-2 mb-3" style="gap:20px">
+        <div class="avatar-upload">
+          ${d.photo ? `<img class="avatar-img" src="${d.photo}" id="profileAvatarPreview">` : `<div class="avatar-placeholder" id="profileAvatarPreview" style="background:${color}22;color:${color};border-color:${color}44">${initials}</div>`}
+          <label class="avatar-edit" for="avatarFileInput" title="Change photo">✎
+            <input type="file" id="avatarFileInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(${d.id},this)">
+          </label>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:1.1rem">${d.name}</div>
+          <div class="flex items-center gap-2 mt-1" style="gap:8px">
+            <div class="blood-type ${btClass}" style="width:36px;height:36px;font-size:0.8rem">${d.blood}</div>
+            <span class="text-sm text-muted">Member since ${formatDate(d.joinDate)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-xs text-muted" style="background:var(--bg3);padding:0.75rem;border-radius:8px">
+        📸 Click the ✎ icon to upload a profile photo. Accepted: JPG, PNG (max 2MB). Your photo will show in donor searches.
+      </div>
+    </div>
+
+    <div class="card">
+      <h4 class="syne mb-3" style="font-size:0.95rem;font-weight:700;margin-bottom:1.25rem">Personal Information</h4>
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="grid-2">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" class="form-control" id="editFName" value="${nameParts[0]||''}">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" class="form-control" id="editLName" value="${nameParts.slice(1).join(' ')||''}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" class="form-control" id="editPhone" value="${d.phone||''}">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Division</label>
+            <select class="form-control" id="editDivision" onchange="updateDistrictOptions('editDistrict','editDivision')">
+              ${Object.keys(DISTRICTS).map(div=>`<option ${d.division===div?'selected':''}>${div}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>District</label>
+            <select class="form-control" id="editDistrict">
+              ${(DISTRICTS[d.division]||[]).map(dist=>`<option ${d.district===dist?'selected':''}>${dist}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Area / Address</label>
+          <input type="text" class="form-control" id="editArea" value="${d.area||''}">
+        </div>
+        <div class="form-group">
+          <label>Last Donation Date (Optional)</label>
+          <input type="date" class="form-control" id="editLastDonation" value="${d.lastDonationDate||''}">
+        </div>
+        <div class="divider"></div>
+        <div class="toggle-wrap">
+          <label class="toggle">
+            <input type="checkbox" id="editActive" ${d.active?'checked':''}>
+            <span class="toggle-slider"></span>
+          </label>
+          <div>
+            <div class="text-sm font-bold">Active Status</div>
+            <div class="text-xs text-muted">When active, you appear in donor searches</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveProfile(${d.id})">Save Changes</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleDonorStatus(id, active){
+  const d = donors.find(x=>x.id===id);
+  if(d){ d.active=active; showToast(active?'You are now visible to blood seekers ✓':'You are now hidden from searches','info'); }
+}
+
+function handleRequest(reqId, action){
+  const req = bloodRequests.find(r=>r.id===reqId);
+  if(!req) return;
+  req.status = action;
+  if(action==='accepted'){
+    req.acceptedDate = new Date().toISOString();
+    // Calculate days since last donation
+    const donor = donors.find(d=>d.id===req.donorId);
+    if(donor){
+      const today = new Date();
+      const lastDate = donor.lastDonationDate ? new Date(donor.lastDonationDate) : null;
+      if(lastDate){
+        const diffMs = today - lastDate;
+        donor.lastDonation = Math.floor(diffMs / (1000*60*60*24));
+      }
+      // Add to donation history with today's date
+      donor.history.push({date: today.toISOString().split('T')[0], recipient: req.hospital.split(',')[0]});
+      donor.lastDonation = 0; // Just donated
+      donor.lastDonationDate = today.toISOString().split('T')[0];
+    }
+    showToast('Request accepted! Contact details shared.','success');
+  } else {
+    showToast('Request declined.','info');
+  }
+  showDonorPanel('requests');
+}
+
+function openDeclineModal(reqId){
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header">
+      <div class="modal-title">Decline Request</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <p class="text-sm text-muted mb-2">Please provide a reason for declining. The admin will try to find an alternative donor.</p>
+    <div class="form-group mb-3">
+      <label>Reason for Declining</label>
+      <textarea class="form-control" id="declineReason" placeholder="e.g. Currently unwell, out of town..."></textarea>
+    </div>
+    <button class="btn btn-danger w-full" onclick="confirmDecline(${reqId})">Decline Request</button>
+  `;
+  openModal();
+}
+
+function confirmDecline(reqId){
+  const reason = document.getElementById('declineReason').value||'No reason provided';
+  const req = bloodRequests.find(r=>r.id===reqId);
+  if(req){ req.status='declined'; req.declineReason=reason; }
+  closeModal();
+  showToast('Request declined. Admin has been notified.','info');
+  showDonorPanel('requests');
+}
+
+function handleAvatarUpload(donorId, input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const donor = donors.find(d=>d.id===donorId);
+    if(donor) donor.photo = e.target.result;
+    const preview = document.getElementById('profileAvatarPreview');
+    if(preview){
+      preview.outerHTML = `<img class="avatar-img" src="${e.target.result}" id="profileAvatarPreview">`;
+    }
+    showToast('Profile photo updated!','success');
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveProfile(id){
+  const d = donors.find(x=>x.id===id);
+  if(!d) return;
+  const fname = document.getElementById('editFName').value;
+  const lname = document.getElementById('editLName').value;
+  const phone = document.getElementById('editPhone').value;
+  const division = document.getElementById('editDivision').value;
+  const district = document.getElementById('editDistrict').value;
+  const area = document.getElementById('editArea').value;
+  const active = document.getElementById('editActive').checked;
+  const lastDonDate = document.getElementById('editLastDonation').value;
+
+  d.name = `${fname} ${lname}`.trim();
+  d.phone = phone;
+  d.division = division;
+  d.district = district;
+  d.area = area;
+  d.active = active;
+
+  if(lastDonDate){
+    d.lastDonationDate = lastDonDate;
+    const diffMs = new Date() - new Date(lastDonDate);
+    d.lastDonation = Math.floor(diffMs/(1000*60*60*24));
+  }
+
+  document.getElementById('sidebarName').textContent = d.name;
+  document.getElementById('sidebarBloodType').textContent = d.blood+' Donor';
+  showToast('Profile updated successfully!','success');
+}
+
+// ==================== ADMIN DASHBOARD ====================
+function initAdminDashboard(){ showAdminPanel('overview'); }
+
+function showAdminPanel(panel){
+  document.querySelectorAll('#adminSidebar .sidebar-item').forEach(i=>i.classList.remove('active'));
+  const panels=['overview','users','declined','requests'];
+  const idx=panels.indexOf(panel);
+  if(idx>=0) document.querySelectorAll('#adminSidebar .sidebar-item')[idx]?.classList.add('active');
+
+  const content = document.getElementById('adminMainContent');
+  if(panel==='overview') content.innerHTML = renderAdminOverview();
+  else if(panel==='users') content.innerHTML = renderAdminUsers();
+  else if(panel==='declined') content.innerHTML = renderAdminDeclined();
+  else if(panel==='requests') content.innerHTML = renderAdminRequests();
+}
+
+function renderAdminOverview(){
+  const totalDonors = donors.length;
+  const activeDonors = donors.filter(d=>d.active).length;
+  const pendingReqs = bloodRequests.filter(r=>r.status==='pending').length;
+  const declinedReqs = bloodRequests.filter(r=>r.status==='declined').length;
+  const totalDonations = donors.reduce((s,d)=>s+d.history.length,0);
+
+  return `
+    <div class="section-header">
+      <h2 class="section-title">Admin Overview</h2>
+      <p class="section-subtitle">Platform statistics and management</p>
+    </div>
+
+    <div class="grid-4 mb-3">
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.5rem;color:var(--red)">${totalDonors}</div>
+        <div class="text-xs text-muted">Total Donors</div>
+      </div>
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.5rem;color:var(--green)">${activeDonors}</div>
+        <div class="text-xs text-muted">Active Donors</div>
+      </div>
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.5rem;color:var(--yellow)">${pendingReqs}</div>
+        <div class="text-xs text-muted">Pending Requests</div>
+      </div>
+      <div class="card card-sm text-center">
+        <div class="stat-num" style="font-size:1.5rem;color:var(--red)">${declinedReqs}</div>
+        <div class="text-xs text-muted">Declined (Need Attention)</div>
+      </div>
+    </div>
+
+    <div class="grid-2 mb-3">
+      <div class="card">
+        <h4 class="syne mb-2" style="font-size:0.95rem;font-weight:700;margin-bottom:12px">Blood Type Distribution</h4>
+        ${['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(bt=>{
+          const count = donors.filter(d=>d.blood===bt).length;
+          const pct = Math.round((count/totalDonors)*100);
+          const btClass = BLOOD_COLORS[bt]||'bt-ap';
+          return `<div class="flex items-center gap-2 mb-1" style="gap:10px;margin-bottom:10px">
+            <div class="blood-type ${btClass}" style="width:36px;height:28px;font-size:0.75rem;border-radius:6px">${bt}</div>
+            <div style="flex:1">
+              <div class="progress-bar"><div class="progress-fill" style="width:${pct*3}%;min-width:4px"></div></div>
+            </div>
+            <span class="text-xs text-muted" style="min-width:40px">${count} (${pct}%)</span>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <div class="card">
+        <h4 class="syne mb-2" style="font-size:0.95rem;font-weight:700;margin-bottom:12px">Recent Declined Requests</h4>
+        ${bloodRequests.filter(r=>r.status==='declined').slice(0,3).map(r=>{
+          const donor = donors.find(d=>d.id===r.donorId);
+          return `<div class="card-sm mb-1" style="margin-bottom:8px;background:var(--bg3)">
+            <div class="text-sm font-bold">${r.recipientName}</div>
+            <div class="text-xs text-muted">Needs: ${donor?.blood||'?'} • ${r.hospital.substring(0,40)}...</div>
+            <div class="text-xs text-muted">Reason: ${r.declineReason||'Not specified'}</div>
+            <button class="btn btn-ghost btn-sm mt-1" onclick="adminFindAlternative('${donor?.blood||'A+'}','${donor?.district||'Dhaka'}')">🔍 Find Alternative</button>
+          </div>`;
+        }).join('')}
+        <button class="btn btn-ghost btn-sm w-full mt-2" onclick="showAdminPanel('declined')">View All Declined →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminUsers(){
+  return `
+    <div class="section-header flex items-center justify-between">
+      <div>
+        <h2 class="section-title">User Management</h2>
+        <p class="section-subtitle">${donors.length} registered donors</p>
+      </div>
+      <div class="flex items-center gap-2" style="gap:10px">
+        <input type="text" class="form-control" id="userSearchInput" placeholder="Search name..." oninput="filterAdminUsers()" style="width:200px">
+        <select class="filter-select form-control" id="userFilterBlood" onchange="filterAdminUsers()" style="width:auto">
+          <option value="">All Types</option>
+          ${['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(bt=>`<option>${bt}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="table-wrapper" id="adminUsersTable">
+      ${renderUsersTable(donors)}
+    </div>
+  `;
+}
+
+function renderUsersTable(list){
+  return `<table>
+    <thead><tr><th>Donor</th><th>Blood Type</th><th>Location</th><th>Status</th><th>Donations</th><th>Last Donation</th><th>Actions</th></tr></thead>
+    <tbody>
+      ${list.map(d=>{
+        const btClass = BLOOD_COLORS[d.blood]||'bt-ap';
+        const initials = d.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+        const color = AVATAR_COLORS[d.id % AVATAR_COLORS.length];
+        return `<tr>
+          <td>
+            <div class="flex items-center gap-2" style="gap:10px">
+              <div style="width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;background:${color}22;color:${color};border:1px solid ${color}44;flex-shrink:0">${initials}</div>
+              <div><div style="font-weight:500">${d.name}</div><div class="text-xs text-muted">${d.email}</div></div>
+            </div>
+          </td>
+          <td><div class="blood-type ${btClass}" style="width:40px;height:32px;font-size:0.78rem;border-radius:8px">${d.blood}</div></td>
+          <td><span class="text-sm">${d.district}</span></td>
+          <td><span class="badge ${d.active?'badge-green':'badge-gray'}">${d.active?'Active':'Inactive'}</span></td>
+          <td><span class="badge badge-red">${d.history.length}</span></td>
+          <td class="text-sm text-muted">${d.lastDonation!==null?d.lastDonation+'d ago':'Never'}</td>
+          <td>
+            <div class="flex items-center gap-2" style="gap:6px">
+              <button class="btn btn-ghost btn-sm" onclick="adminToggleUser(${d.id})">${d.active?'Deactivate':'Activate'}</button>
+              <button class="btn btn-danger btn-sm" onclick="adminDeleteUser(${d.id})">Remove</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
+function filterAdminUsers(){
+  const search = document.getElementById('userSearchInput')?.value.toLowerCase()||'';
+  const blood = document.getElementById('userFilterBlood')?.value||'';
+  const filtered = donors.filter(d=>{
+    if(search && !d.name.toLowerCase().includes(search)) return false;
+    if(blood && d.blood!==blood) return false;
+    return true;
+  });
+  document.getElementById('adminUsersTable').innerHTML = renderUsersTable(filtered);
+}
+
+function adminToggleUser(id){
+  const d = donors.find(x=>x.id===id);
+  if(d){ d.active=!d.active; showToast(`${d.name} ${d.active?'activated':'deactivated'}.`,'info'); renderAdminUsers(); showAdminPanel('users'); }
+}
+
+function adminDeleteUser(id){
+  if(confirm('Are you sure you want to remove this donor?')){
+    const idx = donors.findIndex(x=>x.id===id);
+    if(idx>=0){ const name=donors[idx].name; donors.splice(idx,1); showToast(`${name} removed.`,'info'); showAdminPanel('users'); }
+  }
+}
+
+function renderAdminDeclined(){
+  const declined = bloodRequests.filter(r=>r.status==='declined');
+  return `
+    <div class="section-header">
+      <h2 class="section-title">Declined Requests</h2>
+      <p class="section-subtitle">These requests were declined by donors. Find alternative blood sources.</p>
+    </div>
+    ${declined.length===0 ? '<div class="empty-state"><div class="empty-state-icon">✅</div><div class="empty-state-title">No declined requests</div><p>All requests have been fulfilled!</p></div>' :
+    `<div style="display:flex;flex-direction:column;gap:1rem">
+      ${declined.map(r=>{
+        const donor = donors.find(d=>d.id===r.donorId);
+        const urgencyLabel = {critical:'🔴 Critical',high:'🟠 High',normal:'🟢 Normal'};
+        return `<div class="request-card" style="border-left:3px solid var(--red)">
+          <div class="request-header">
+            <div>
+              <div class="request-title">${r.recipientName}</div>
+              <div class="text-xs text-muted">Requested: ${formatDate(r.date)}</div>
+            </div>
+            <span class="badge badge-red">${urgencyLabel[r.urgency]||r.urgency}</span>
+          </div>
+          <div class="request-meta">
+            <span>🩸 Needs: <strong>${donor?.blood||'Unknown'}</strong></span>
+            <span>🏥 ${r.hospital}</span>
+            <span>📞 ${r.mobile}</span>
+            ${r.declineReason?`<span style="color:var(--yellow)">❌ Reason: ${r.declineReason}</span>`:''}
+          </div>
+          <div class="request-actions">
+            <button class="btn btn-primary btn-sm" onclick="adminFindAlternative('${donor?.blood||'A+'}','${donor?.district||'Dhaka'}')">🔍 Find Alternative ${donor?.blood||''} in ${donor?.district||''}</button>
+            <button class="btn btn-ghost btn-sm" onclick="markResolved(${r.id})">Mark Resolved</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`}
+  `;
+}
+
+function renderAdminRequests(){
+  return `
+    <div class="section-header">
+      <h2 class="section-title">All Blood Requests</h2>
+      <p class="section-subtitle">${bloodRequests.length} total requests</p>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Recipient</th><th>Blood Needed</th><th>Hospital</th><th>Urgency</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          ${bloodRequests.map(r=>{
+            const donor = donors.find(d=>d.id===r.donorId);
+            const btClass = BLOOD_COLORS[donor?.blood||'A+']||'bt-ap';
+            const statusMap = {pending:'badge-yellow',accepted:'badge-green',declined:'badge-red'};
+            const urgencyLabel = {critical:'🔴 Critical',high:'🟠 High',normal:'🟢 Normal'};
+            return `<tr>
+              <td style="font-weight:500">${r.recipientName}</td>
+              <td><div class="blood-type ${btClass}" style="width:36px;height:28px;font-size:0.75rem;border-radius:6px">${donor?.blood||'?'}</div></td>
+              <td class="text-sm text-muted">${r.hospital.substring(0,35)}...</td>
+              <td>${urgencyLabel[r.urgency]||r.urgency}</td>
+              <td><span class="badge ${statusMap[r.status]||'badge-gray'}">${r.status}</span></td>
+              <td class="text-sm text-muted">${formatDate(r.date)}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function adminFindAlternative(blood, district){
+  closeModal();
+  navigate('find-donor');
+  setTimeout(()=>{
+    document.getElementById('filterBloodType').value = blood;
+    filterDonors();
+    showToast(`Showing ${blood} donors — find an alternative!`,'info');
+  }, 300);
+}
+
+function markResolved(reqId){
+  const req = bloodRequests.find(r=>r.id===reqId);
+  if(req){ req.status='resolved'; showToast('Marked as resolved.','success'); showAdminPanel('declined'); }
+}
+
+// ==================== MODAL UTILITIES ====================
+function openModal(){ document.getElementById('modalOverlay').classList.add('open'); }
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('open'); }
+document.getElementById('modalOverlay').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+
+// ==================== TOAST ====================
+function showToast(msg, type='info'){
+  const icons = {success:'✓',error:'✕',info:'ℹ'};
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `<div class="toast-icon">${icons[type]||'ℹ'}</div><span>${msg}</span>`;
+  document.getElementById('toastContainer').appendChild(toast);
+  setTimeout(()=>{ toast.style.opacity='0'; toast.style.transform='translateX(20px)'; toast.style.transition='all 0.3s'; setTimeout(()=>toast.remove(),300); }, 3500);
+}
+
+// ==================== HELPERS ====================
+function formatDate(dateStr){
+  if(!dateStr) return '—';
+  const d = new Date(dateStr);
+  if(isNaN(d)) return dateStr;
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function getTimeAgo(dateStr){
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff/60000);
+  if(mins<60) return mins+'m ago';
+  const hrs = Math.floor(mins/60);
+  if(hrs<24) return hrs+'h ago';
+  return Math.floor(hrs/24)+'d ago';
+}
+
+// Init home page
+navigate('home');
+
+// Responsive nav
+window.addEventListener('resize',()=>{ if(window.innerWidth>768) closeMobileMenu(); });
+
+// Hamburger visibility
+function checkNav(){
+  const hamburger = document.getElementById('hamburger');
+  if(window.innerWidth<=768){
+    hamburger.style.display='flex';
+    document.getElementById('navLinks').style.display='none';
+    document.getElementById('navActions').style.display='none';
+  } else {
+    hamburger.style.display='none';
+    document.getElementById('navLinks').style.display='flex';
+    document.getElementById('navActions').style.display='flex';
+  }
+}
+window.addEventListener('resize', checkNav);
+checkNav();
+</script>
+</body>
+</html>
